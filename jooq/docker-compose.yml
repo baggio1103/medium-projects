@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+
+  postgresql:
+    container_name: database
+    image: postgres:15.4-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=posts
+      - POSTGRES_USER=posts
+      - POSTGRES_PASSWORD=posts-password
