@@ -1,11 +1,12 @@
-package com.atomiccoding
+package com.atomic.coding
 
 import org.flywaydb.core.Flyway
+import javax.sql.DataSource
 
-fun main() {
+fun flywayMigrate(dataSource: DataSource) {
     val flyway = Flyway.configure()
         .dataSource(
-            hikariDataSource()
+            dataSource
         )
         .load()
     flyway.migrate()
