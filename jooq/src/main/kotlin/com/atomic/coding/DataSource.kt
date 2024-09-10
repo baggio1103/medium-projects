@@ -1,4 +1,4 @@
-package com.atomiccoding
+package com.atomic.coding
 
 import com.zaxxer.hikari.HikariDataSource
 
