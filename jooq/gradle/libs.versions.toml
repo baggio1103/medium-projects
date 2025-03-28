@@ -1,0 +1,30 @@
+[versions]
+coroutines = "1.10.1"
+hikari-cp = "6.2.1"
+postgresVersion = "42.7.5"
+flywayVersion = "11.4.0"
+jooq-plugin-version = "3.20.2"
+slf4j-version = "2.0.16"
+logback-classic-version = "1.5.8"
+
+[libraries]
+# Coroutines
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-core-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+# Database
+hikari-cp = { module = "com.zaxxer:HikariCP", version.ref = "hikari-cp" }
+postgresSql = { module = "org.postgresql:postgresql", version.ref = "postgresVersion" }
+flyway = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flywayVersion" }
+
+# jOOQ
+jooq = { module = "org.jooq:jooq", version.ref = "jooq-plugin-version" }
+
+# Logging
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j-version" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback-classic-version" }
+
+[bundles]
+coroutines = ["coroutines-core", "coroutines-core-test"]
+database = ["hikari-cp", "postgresSql", "flyway"]
+logging = ["slf4j", "logback"]

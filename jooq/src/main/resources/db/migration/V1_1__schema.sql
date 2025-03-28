@@ -1,22 +1,48 @@
-CREATE SCHEMA  if NOT exists public;
-
-CREATE TABLE posts
+CREATE TABLE authors
 (
-    id         SERIAL PRIMARY KEY,
-    title      TEXT NOT NULL,
-    content    TEXT NOT NULL,
-    author     TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id SERIAL PRIMARY KEY,
+    name      VARCHAR(100) NOT NULL
 );
 
-INSERT INTO posts (title, content, author)
-VALUES ('Getting Started with SQL', 'This post is about the basics of SQL.', 'John Doe'),
-       ('Understanding JOINs in SQL', 'Learn how to use different types of JOINs in SQL.', 'Jane Smith'),
-       ('Advanced SQL Queries', 'Dive into more advanced SQL queries.', 'John Doe'),
-       ('SQL Best Practices', 'Tips and tricks for writing efficient SQL.', 'Alice Johnson'),
-       ('Working with Transactions in SQL', 'Learn how to manage transactions in SQL.', 'Bob Brown'),
-       ('Introduction to SQL Indexing', 'An overview of indexing in SQL.', 'Jane Smith'),
-       ('How to Optimize SQL Queries', 'Techniques for optimizing SQL queries.', 'Alice Johnson'),
-       ('Common SQL Mistakes', 'Avoid these common mistakes when writing SQL.', 'John Doe'),
-       ('Understanding SQL Constraints', 'Learn about various constraints in SQL.', 'Bob Brown'),
-       ('Using Subqueries in SQL', 'How to use subqueries effectively in SQL.', 'Jane Smith');
+CREATE TABLE author_details
+(
+    id     SERIAL PRIMARY KEY,
+    author_id     INT UNIQUE,
+    bio           TEXT,
+    date_of_birth DATE,
+    nationality   VARCHAR(50),
+    FOREIGN KEY (author_id) REFERENCES authors (id)
+);
+
+CREATE TABLE publishers
+(
+    id SERIAL PRIMARY KEY,
+    name         VARCHAR(100) NOT NULL,
+    address      VARCHAR(255)
+);
+
+CREATE TABLE books
+(
+    id          SERIAL PRIMARY KEY,
+    title            VARCHAR(200) NOT NULL,
+    author_id        INT,
+    publisher_id     INT,
+    publication_year INT,
+    FOREIGN KEY (author_id) REFERENCES authors (id),
+    FOREIGN KEY (publisher_id) REFERENCES publishers (id)
+);
+
+CREATE TABLE categories
+(
+    category_id SERIAL PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE books_and_categories
+(
+    book_id     INT,
+    category_id INT,
+    PRIMARY KEY (book_id, category_id),
+    FOREIGN KEY (book_id) REFERENCES books (id),
+    FOREIGN KEY (category_id) REFERENCES categories (category_id)
+);

@@ -8,6 +8,6 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=posts
-      - POSTGRES_USER=posts
-      - POSTGRES_PASSWORD=posts-password
+      - POSTGRES_DB=book-hub
+      - POSTGRES_USER=book-hub-user
+      - POSTGRES_PASSWORD=hashed-password

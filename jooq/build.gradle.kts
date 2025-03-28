@@ -5,9 +5,9 @@ val jooqPluginVersion = "3.19.11"
 val postgresqlVersion = "42.7.4"
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.1.10"
     id("nu.studer.jooq") version "9.0"
-    id("org.flywaydb.flyway") version "9.22.3"
+    id("org.flywaydb.flyway") version "11.4.0"
 }
 
 group = "com.atomiccoding"
@@ -18,25 +18,23 @@ repositories {
 }
 
 dependencies {
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.flywaydb:flyway-database-postgresql:10.17.3")
+    // Postgres, Flyway and Jooq
+    implementation(libs.bundles.database)
+    implementation(libs.jooq)
+    jooqGenerator(libs.postgresSql)
 
     // Logging
-    implementation("org.slf4j:slf4j-api:2.0.16")
-    implementation("ch.qos.logback:logback-classic:1.5.8")
+    implementation(libs.bundles.logging)
 
-    // JOOQ
-    implementation("org.jooq:jooq:$jooqPluginVersion")
-    jooqGenerator("org.postgresql:postgresql:$postgresqlVersion")
+    implementation(libs.bundles.coroutines)
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
 flyway {
-    url = "jdbc:postgresql://localhost:5432/posts"
-    user = "posts"
-    password = "posts-password"
+    url = "jdbc:postgresql://localhost:5432/book-hub"
+    user = "book-hub-user"
+    password = "hashed-password"
     locations = arrayOf(
         "filesystem:src/main/resources/db/migration",
     )
@@ -49,7 +47,6 @@ jooq {
         create("main") {
             jooqConfiguration.apply {
                 logging = Logging.INFO
-
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
                     url = flyway.url
