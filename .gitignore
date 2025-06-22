@@ -40,3 +40,5 @@ bin/
 .vscode/
 
 ### Mac OS ###
+
+./kotlin-lang
