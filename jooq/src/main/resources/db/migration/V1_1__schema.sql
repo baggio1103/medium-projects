@@ -1,48 +1,31 @@
-CREATE TABLE authors
+CREATE TABLE orders
 (
-    id SERIAL PRIMARY KEY,
-    name      VARCHAR(100) NOT NULL
+    id            SERIAL PRIMARY KEY,
+    customer_name VARCHAR(100)   NOT NULL,
+    order_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_price  NUMERIC(10, 2) NOT NULL CHECK (total_price >= 0)
 );
 
-CREATE TABLE author_details
+CREATE TABLE items
 (
-    id     SERIAL PRIMARY KEY,
-    author_id     INT UNIQUE,
-    bio           TEXT,
-    date_of_birth DATE,
-    nationality   VARCHAR(50),
-    FOREIGN KEY (author_id) REFERENCES authors (id)
+    id    SERIAL PRIMARY KEY,
+    name  VARCHAR(100)   NOT NULL,
+    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0)
 );
 
-CREATE TABLE publishers
+CREATE TABLE order_items
 (
-    id SERIAL PRIMARY KEY,
-    name         VARCHAR(100) NOT NULL,
-    address      VARCHAR(255)
+    order_id INT NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    item_id  INT NOT NULL REFERENCES items (id),
+    quantity INT NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (order_id, item_id)
 );
 
-CREATE TABLE books
+CREATE TABLE deliveries
 (
-    id          SERIAL PRIMARY KEY,
-    title            VARCHAR(200) NOT NULL,
-    author_id        INT,
-    publisher_id     INT,
-    publication_year INT,
-    FOREIGN KEY (author_id) REFERENCES authors (id),
-    FOREIGN KEY (publisher_id) REFERENCES publishers (id)
-);
-
-CREATE TABLE categories
-(
-    category_id SERIAL PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE books_and_categories
-(
-    book_id     INT,
-    category_id INT,
-    PRIMARY KEY (book_id, category_id),
-    FOREIGN KEY (book_id) REFERENCES books (id),
-    FOREIGN KEY (category_id) REFERENCES categories (category_id)
+    id                      SERIAL PRIMARY KEY,
+    order_id                INT UNIQUE  NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    address                 TEXT        NOT NULL,
+    delivery_status         VARCHAR(50) NOT NULL DEFAULT 'pending',
+    estimated_delivery_date DATE
 );
