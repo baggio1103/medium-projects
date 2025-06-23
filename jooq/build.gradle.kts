@@ -1,13 +1,10 @@
 import org.jooq.meta.jaxb.ForcedType
 import org.jooq.meta.jaxb.Logging
 
-val jooqPluginVersion = "3.19.11"
-val postgresqlVersion = "42.7.4"
-
 plugins {
     kotlin("jvm") version "1.9.22"
-    id("nu.studer.jooq") version "9.0"
-    id("org.flywaydb.flyway") version "9.22.3"
+    id("nu.studer.jooq") version "10.1"
+    id("org.flywaydb.flyway") version "11.9.1"
 }
 
 group = "com.atomiccoding"
@@ -18,32 +15,32 @@ repositories {
 }
 
 dependencies {
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.flywaydb:flyway-database-postgresql:10.17.3")
+    implementation(libs.kotlinx.coroutines.core)
 
-    // Logging
-    implementation("org.slf4j:slf4j-api:2.0.16")
-    implementation("ch.qos.logback:logback-classic:1.5.8")
+    implementation(libs.flyway.postgres)
+    implementation(libs.bundles.database)
 
-    // JOOQ
-    implementation("org.jooq:jooq:$jooqPluginVersion")
-    jooqGenerator("org.postgresql:postgresql:$postgresqlVersion")
+    implementation(libs.bundles.logging)
+
+    // jooq be omitted, can be configured by the plugin
+    implementation(libs.jooq)
+    jooqGenerator(libs.postgresql)
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
 flyway {
-    url = "jdbc:postgresql://localhost:5432/posts"
-    user = "posts"
-    password = "posts-password"
+    driver = "org.postgresql.Driver"
+    url = "jdbc:postgresql://localhost:5432/ecommerce"
+    user = "ecommerce-user"
+    password = "ecommerce-password"
     locations = arrayOf(
         "filesystem:src/main/resources/db/migration",
     )
 }
 
 jooq {
-    version.set(jooqPluginVersion)
+    version.set(libs.versions.jooq.get())
     edition.set(nu.studer.gradle.jooq.JooqEdition.OSS)
     configurations {
         create("main") {
@@ -51,7 +48,7 @@ jooq {
                 logging = Logging.INFO
 
                 jdbc.apply {
-                    driver = "org.postgresql.Driver"
+                    driver = flyway.driver
                     url = flyway.url
                     user = flyway.user
                     password = flyway.password
@@ -93,6 +90,7 @@ jooq {
 val jooqTask = tasks.named("generateJooq").get()
 
 val flywayTask = tasks.find { it.name == "flywayMigrate" }
+println("Task: ${flywayTask?.name}")
 
 jooqTask.dependsOn(flywayTask)
 
@@ -100,5 +98,5 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(19)
+    jvmToolchain(21)
 }

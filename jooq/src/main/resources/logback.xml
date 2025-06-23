@@ -1,11 +1,26 @@
-<configuration>к
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Console appender -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!-- Root logger -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <!-- jOOQ SQL logger -->
+    <logger name="org.jooq.tools.LoggerListener" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Optional: jOOQ internals logging -->
+    <logger name="org.jooq.tools" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
 </configuration>

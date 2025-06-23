@@ -5,6 +5,7 @@ import com.atomic.coding.Application.logger
 import com.atomic.coding.Application.orderItems
 import com.atomic.coding.Application.orderService
 import com.atomic.coding.domain.OrderItem
+import com.atomic.coding.repository.DataSource
 import com.atomic.coding.repository.ItemRepository
 import com.atomic.coding.repository.OrderRepository
 import com.atomic.coding.service.OrderService
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory
 object Application {
     val logger: Logger = LoggerFactory.getLogger("Application")
     private val dsl = DSL.using(
-        hikariDataSource(),
+        DataSource.hikariDataSource(),
         SQLDialect.POSTGRES
     )
     val orderService = OrderService(

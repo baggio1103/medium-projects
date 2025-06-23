@@ -1,22 +1,31 @@
-CREATE SCHEMA  if NOT exists public;
-
-CREATE TABLE posts
+CREATE TABLE orders
 (
-    id         SERIAL PRIMARY KEY,
-    title      TEXT NOT NULL,
-    content    TEXT NOT NULL,
-    author     TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id            SERIAL PRIMARY KEY,
+    customer_name VARCHAR(100)   NOT NULL,
+    order_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_price  NUMERIC(10, 2) NOT NULL CHECK (total_price >= 0)
 );
 
-INSERT INTO posts (title, content, author)
-VALUES ('Getting Started with SQL', 'This post is about the basics of SQL.', 'John Doe'),
-       ('Understanding JOINs in SQL', 'Learn how to use different types of JOINs in SQL.', 'Jane Smith'),
-       ('Advanced SQL Queries', 'Dive into more advanced SQL queries.', 'John Doe'),
-       ('SQL Best Practices', 'Tips and tricks for writing efficient SQL.', 'Alice Johnson'),
-       ('Working with Transactions in SQL', 'Learn how to manage transactions in SQL.', 'Bob Brown'),
-       ('Introduction to SQL Indexing', 'An overview of indexing in SQL.', 'Jane Smith'),
-       ('How to Optimize SQL Queries', 'Techniques for optimizing SQL queries.', 'Alice Johnson'),
-       ('Common SQL Mistakes', 'Avoid these common mistakes when writing SQL.', 'John Doe'),
-       ('Understanding SQL Constraints', 'Learn about various constraints in SQL.', 'Bob Brown'),
-       ('Using Subqueries in SQL', 'How to use subqueries effectively in SQL.', 'Jane Smith');
+CREATE TABLE items
+(
+    id    SERIAL PRIMARY KEY,
+    name  VARCHAR(100)   NOT NULL,
+    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0)
+);
+
+CREATE TABLE order_items
+(
+    order_id INT NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    item_id  INT NOT NULL REFERENCES items (id),
+    quantity INT NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (order_id, item_id)
+);
+
+CREATE TABLE deliveries
+(
+    id                      SERIAL PRIMARY KEY,
+    order_id                INT UNIQUE  NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    address                 TEXT        NOT NULL,
+    delivery_status         VARCHAR(50) NOT NULL DEFAULT 'pending',
+    estimated_delivery_date DATE
+);

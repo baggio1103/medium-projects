@@ -4,10 +4,10 @@ services:
 
   postgresql:
     container_name: database
-    image: postgres:15.4-alpine
+    image: postgres:17.4-alpine3.21
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=posts
-      - POSTGRES_USER=posts
-      - POSTGRES_PASSWORD=posts-password
+      - POSTGRES_DB=ecommerce
+      - POSTGRES_USER=ecommerce-user
+      - POSTGRES_PASSWORD=ecommerce-password
